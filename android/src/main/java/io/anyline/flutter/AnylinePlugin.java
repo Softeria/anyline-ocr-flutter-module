@@ -73,6 +73,11 @@ public class AnylinePlugin implements
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
         onAttachedToEngine(flutterPluginBinding.getApplicationContext(), flutterPluginBinding.getBinaryMessenger());
+        
+        flutterPluginBinding.getPlatformViewRegistry().registerViewFactory(
+                "anyline_embedded_plugin",
+                new AnylineEmbeddedPlugin(flutterPluginBinding.getBinaryMessenger())
+        );
     }
 
     private void onAttachedToEngine(Context applicationContext, BinaryMessenger messenger) {
