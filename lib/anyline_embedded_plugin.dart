@@ -11,12 +11,14 @@ class AnylineEmbeddedPlugin extends StatefulWidget {
     this.onResult,
     this.onError,
     this.autoStart = true,
+    this.initialFlashState = false,
   }) : super(key: key);
 
   final String config;
   final Function(String result)? onResult;
   final Function(String error)? onError;
   final bool autoStart;
+  final bool initialFlashState;
 
   @override
   State<AnylineEmbeddedPlugin> createState() => AnylineEmbeddedPluginState();
@@ -31,6 +33,14 @@ class AnylineEmbeddedPluginState extends State<AnylineEmbeddedPlugin> {
 
   Future<void> stop() async => await _method?.invokeMethod('stop');
 
+  Future<bool?> toggleFlash() async =>
+      await _method?.invokeMethod('toggleFlash');
+
+  Future<void> setFlashOn(bool on) async =>
+      await _method?.invokeMethod('setFlashOn', on);
+
+  Future<bool?> getFlashOn() async => await _method?.invokeMethod('getFlashOn');
+
   @override
   Widget build(BuildContext context) {
     if (defaultTargetPlatform != TargetPlatform.android) {
@@ -39,7 +49,10 @@ class AnylineEmbeddedPluginState extends State<AnylineEmbeddedPlugin> {
 
     return AndroidView(
       viewType: 'anyline_embedded_plugin',
-      creationParams: {'config': widget.config},
+      creationParams: {
+        'config': widget.config,
+        'initialFlashState': widget.initialFlashState,
+      },
       creationParamsCodec: const StandardMessageCodec(),
       onPlatformViewCreated: (viewId) {
         _method = MethodChannel('anyline_embedded/methods_$viewId');

@@ -46,6 +46,7 @@ public class AnylineEmbeddedPlugin extends PlatformViewFactory {
         private EventChannel.EventSink eventSink;
         private boolean isScanning = false;
         private final Handler mainHandler = new Handler(Looper.getMainLooper());
+        private boolean flashOn = false;
 
         ScannerView(Context context, BinaryMessenger messenger, int viewId, Map<String, Object> params) {
             super(context);
@@ -67,6 +68,11 @@ public class AnylineEmbeddedPlugin extends PlatformViewFactory {
 
             cameraView = new CameraView(context);
             addView(cameraView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+
+            Boolean initialFlashState = (Boolean) params.get("initialFlashState");
+            if (initialFlashState != null) {
+                flashOn = initialFlashState.booleanValue();
+            }
 
             String config = (String) params.get("config");
             if (config != null) {
@@ -116,6 +122,10 @@ public class AnylineEmbeddedPlugin extends PlatformViewFactory {
                     case "start":
                         if (!isScanning && scanPlugin != null) {
                             cameraView.openCameraInBackground();
+                            try {
+                                cameraView.setFlashOn(flashOn);
+                            } catch (Throwable ignored) {
+                            }
                             scanPlugin.start();
                             isScanning = true;
                         }
@@ -138,6 +148,36 @@ public class AnylineEmbeddedPlugin extends PlatformViewFactory {
                         }
                         result.success(null);
                         break;
+
+                    case "setFlashOn": {
+                        Boolean on = call.argument("on");
+                        if (on == null) {
+                            result.error("ARG_ERROR", "Missing 'on' bool", null);
+                            break;
+                        }
+                        flashOn = on;
+                        try {
+                            cameraView.setFlashOn(flashOn);
+                        } catch (Throwable ignored) {
+                        }
+                        result.success(flashOn);
+                        break;
+                    }
+
+                    case "toggleFlash": {
+                        flashOn = !flashOn;
+                        try {
+                            cameraView.setFlashOn(flashOn);
+                        } catch (Throwable ignored) {
+                        }
+                        result.success(flashOn);
+                        break;
+                    }
+
+                    case "getFlashOn": {
+                        result.success(flashOn);
+                        break;
+                    }
 
                     default:
                         result.notImplemented();
