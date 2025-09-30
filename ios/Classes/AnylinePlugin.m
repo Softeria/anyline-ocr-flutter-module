@@ -1,4 +1,5 @@
 #import "AnylinePlugin.h"
+#import "anyline_ocr_flutter_module-Swift.h"
 
 // Static instance to retain the ALWrapperSessionProvider instance
 static ALWrapperSessionProvider *_wrapperSessionProvider;
@@ -27,12 +28,16 @@ static ALWrapperSessionProvider *_wrapperSessionProvider;
         // Initialize the wrapperSessionProvider static variable
         _wrapperSessionProvider = [[ALWrapperSessionProvider alloc] init];
     }
-    
+
     AnylinePlugin *instance = [AnylinePlugin sharedInstance];
     instance.channel = channel;
-    
+
     [registrar addMethodCallDelegate:instance channel:channel];
     instance.registrar = registrar;
+
+    // Register the embedded view factory
+    NativeScanViewFactory *embeddedViewFactory = [[NativeScanViewFactory alloc] initWithMessenger:[registrar messenger]];
+    [registrar registerViewFactory:embeddedViewFactory withId:@"anyline_embedded_plugin"];
 }
 
 -(NSString * _Nullable)getStringFromArgument:(id) argument {

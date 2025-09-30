@@ -27,9 +27,14 @@ public class Constants {
     public static final String EXTRA_ERROR_CODE = "EXTRA_ERROR_MESSAGE";
 
     public static final String EXCEPTION_DEFAULT = "AnylineException";
+    public static final String EXCEPTION_ANYLINE = "AnylineException";
     public static final String EXCEPTION_LICENSE = "AnylineLicenseException";
+
+    public static final String EXTRA_SCAN_RESULT = "EXTRA_SCAN_RESULT";
 
     public static final int RESULT_CANCELLED = 0;
     public static final int RESULT_OK = 1;
     public static final int RESULT_ERROR = 2;
+
+    public static final int SCAN_ACTIVITY_REQUEST_CODE = 1000;
 }
