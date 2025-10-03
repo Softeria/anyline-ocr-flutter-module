@@ -11,6 +11,7 @@ public class Constants {
     public static final String METHOD_STOP_ANYLINE = "METHOD_STOP_ANYLINE";
     public static final String METHOD_EXPORT_CACHED_EVENTS = "METHOD_EXPORT_CACHED_EVENTS";
     public static final String METHOD_REPORT_UCR = "METHOD_REPORT_UCR";
+    public static final String METHOD_GET_ENVIRONMENT_INFO = "METHOD_GET_ENVIRONMENT_INFO";
 
     public static final String EXTRA_CONFIG_JSON = "EXTRA_CONFIG_JSON";
     public static final String EXTRA_LICENSE_KEY = "EXTRA_LICENSE_KEY";

@@ -15,6 +15,8 @@ abstract class Constants {
   static const String METHOD_EXPORT_CACHED_EVENTS =
       'METHOD_EXPORT_CACHED_EVENTS';
   static const String METHOD_REPORT_UCR = 'METHOD_REPORT_UCR';
+  static const String METHOD_GET_ENVIRONMENT_INFO =
+      'METHOD_GET_ENVIRONMENT_INFO';
 
   static const String EXTRA_CONFIG_JSON = 'EXTRA_CONFIG_JSON';
   static const String EXTRA_INITIALIZATION_PARAMETERS =

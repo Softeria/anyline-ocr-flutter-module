@@ -31,6 +31,7 @@ import io.anyline2.wrapper.extensions.WrapperSessionScanStartRequestExtensionKt;
 import io.anyline2.wrapper.extensions.WrapperSessionSdkInitializationResponseExtensionKt;
 import io.anyline2.wrapper.extensions.WrapperSessionUCRReportRequestExtensionKt;
 import io.anyline2.wrapper.legacy.LegacyPluginHelper;
+import io.anyline2.AppEnvironment;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
@@ -125,6 +126,8 @@ public class AnylinePlugin implements
             reportCorrectedResult(
                     call.argument(Constants.EXTRA_REPORT_UCR_BLOBKEY),
                     call.argument(Constants.EXTRA_REPORT_UCR_CORRECTED_RESULT));
+        } else if (call.method.equals(Constants.METHOD_GET_ENVIRONMENT_INFO)) {
+            getEnvironmentInfo(result);
         } else {
             result.notImplemented();
         }
@@ -291,6 +294,25 @@ public class AnylinePlugin implements
         } else {
             WrapperSessionExportCachedEventsResponseFail exportCachedEventsFail = exportCachedEventsResponse.getFailInfo();
             returnError(exportCachedEventsMethodResult, Constants.EXCEPTION_DEFAULT, exportCachedEventsFail.getLastError());
+        }
+    }
+
+    private void getEnvironmentInfo(MethodChannel.Result result) {
+        try {
+            AppEnvironment appEnvironment = AppEnvironment.Companion.getInstance();
+            if (appEnvironment == null) {
+                result.success(null);
+                return;
+            }
+
+            String jsonString = appEnvironment.toJsonString();
+            if (jsonString == null || jsonString.isEmpty()) {
+                result.success(null);
+            } else {
+                result.success(jsonString);
+            }
+        } catch (Exception e) {
+            returnError(result, Constants.EXCEPTION_DEFAULT, "Failed to get environment info: " + e.getMessage());
         }
     }
 

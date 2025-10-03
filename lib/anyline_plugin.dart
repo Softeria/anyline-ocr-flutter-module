@@ -104,6 +104,28 @@ class AnylinePlugin {
     _channel.invokeMethod(Constants.METHOD_STOP_ANYLINE, params);
   }
 
+  Future<Map<String, dynamic>?> getEnvironmentInfo() async {
+    try {
+      final String? result = await _channel
+          .invokeMethod(Constants.METHOD_GET_ENVIRONMENT_INFO);
+      if (result == null) {
+        return null;
+      }
+
+      final dynamic decoded = json.decode(result);
+      if (decoded is Map<String, dynamic>) {
+        return decoded;
+      }
+
+      return {'value': decoded};
+    } on PlatformException catch (e) {
+      if (kDebugMode) {
+        print('${e.message}');
+      }
+      throw AnylineException.parse(e);
+    }
+  }
+
   // Export all cached events and return the created zip file path.
   // The zip archive will be stored in a temporary folder in order to be copied afterwards.
   //
